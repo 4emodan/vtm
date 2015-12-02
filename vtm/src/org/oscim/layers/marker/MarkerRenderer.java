@@ -50,7 +50,7 @@ public class MarkerRenderer extends BucketRenderer {
 		MarkerItem item;
 		boolean visible;
 		boolean changes;
-		float x, y;
+		float x, y, angle;
 		double px, py;
 		float dy;
 
@@ -182,6 +182,7 @@ public class MarkerRenderer extends BucketRenderer {
 			MercatorProjection.project(it.item.getPoint(), mMapPoint);
 			it.px = mMapPoint.x;
 			it.py = mMapPoint.y;
+			it.angle = it.item.getBearing();
 		}
 		synchronized (this) {
 			mUpdate = true;
