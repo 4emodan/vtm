@@ -93,11 +93,17 @@ public class BucketRenderer extends LayerRenderer {
 		float div = (float) (v.pos.scale / layerPos.scale);
 
 		boolean project = true;
+
 		setMatrix(v, project);
 
-		boolean symbolIndicator = false;
 		for (RenderBucket b = buckets.get(); b != null;) {
+
 			buckets.bind();
+
+			if (!project && b.type != SYMBOL) {
+				project = true;
+				setMatrix(v, project);
+			}
 
 			switch (b.type) {
 				case POLYGON:
@@ -119,29 +125,14 @@ public class BucketRenderer extends LayerRenderer {
 					b = BitmapBucket.Renderer.draw(b, v, 1, 1);
 					break;
 				case SYMBOL:
-					symbolIndicator = true;
-					b = b.next;
-					break;
-				default:
-					log.error("invalid bucket {}", b.type);
-					b = b.next;
-					break;
-			}
-		}
-
-		if (!symbolIndicator)
-			return;
-
-		project = false;
-		setMatrix(v, project);
-
-		for (RenderBucket b = buckets.get(); b != null;) {
-			switch (b.type) {
-				case SYMBOL:
-					buckets.bind();
+					if (project) {
+						project = false;
+						setMatrix(v, project);
+					}
 					b = TextureBucket.Renderer.draw(b, v, div);
 					break;
 				default:
+					log.error("invalid bucket {}", b.type);
 					b = b.next;
 					break;
 			}
