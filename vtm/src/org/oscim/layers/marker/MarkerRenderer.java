@@ -86,10 +86,10 @@ public class MarkerRenderer extends BucketRenderer {
 			return;
 		}
 
-        double mx = v.pos.x;
-        double my = v.pos.y;
-        double scale = Tile.SIZE * v.pos.scale;
-        int numVisible = countVisibleItems(v.pos.getBearing(), mx, my, scale);
+		double mx = v.pos.x;
+		double my = v.pos.y;
+		double scale = Tile.SIZE * v.pos.scale;
+		int numVisible = countVisibleItems(v.pos.getBearing(), mx, my, scale);
 
 		//log.debug(numVisible + " " + changedVisible + " " + changesInvisible);
 
@@ -135,41 +135,41 @@ public class MarkerRenderer extends BucketRenderer {
 		compile();
 	}
 
-    protected int countVisibleItems (double bearing, double mx, double my, double scale){
-        double angle = Math.toRadians(bearing);
-        float cos = (float) Math.cos(angle);
-        float sin = (float) Math.sin(angle);
-        long flip = (long) (Tile.SIZE * scale) >> 1;
+	protected int countVisibleItems(double bearing, double mx, double my, double scale) {
+		double angle = Math.toRadians(bearing);
+		float cos = (float) Math.cos(angle);
+		float sin = (float) Math.sin(angle);
+		long flip = (long) (Tile.SIZE * scale) >> 1;
 
-        int numVisible = 0;
-        for (InternalItem it : mItems) {
-            it.changes = false;
-            it.x = (float) ((it.px - mx) * scale);
-            it.y = (float) ((it.py - my) * scale);
+		int numVisible = 0;
+		for (InternalItem it : mItems) {
+			it.changes = false;
+			it.x = (float) ((it.px - mx) * scale);
+			it.y = (float) ((it.py - my) * scale);
 
-            if (it.x > flip)
-                it.x -= (flip << 1);
-            else if (it.x < -flip)
-                it.x += (flip << 1);
+			if (it.x > flip)
+				it.x -= (flip << 1);
+			else if (it.x < -flip)
+				it.x += (flip << 1);
 
-            if (!GeometryUtils.pointInPoly(it.x, it.y, mBox, 8, 0)) {
-                if (it.visible) {
-                    it.changes = true;
-                    //changesInvisible++;
-                }
-                continue;
-            }
+			if (!GeometryUtils.pointInPoly(it.x, it.y, mBox, 8, 0)) {
+				if (it.visible) {
+					it.changes = true;
+					//changesInvisible++;
+				}
+				continue;
+			}
 
-            it.dy = sin * it.x + cos * it.y;
+			it.dy = sin * it.x + cos * it.y;
 
-            if (!it.visible) {
-                it.visible = true;
-                //changedVisible++;
-            }
-            numVisible++;
-        }
-        return numVisible;
-    }
+			if (!it.visible) {
+				it.visible = true;
+				//changedVisible++;
+			}
+			numVisible++;
+		}
+		return numVisible;
+	}
 
 	protected void populate(int size) {
 

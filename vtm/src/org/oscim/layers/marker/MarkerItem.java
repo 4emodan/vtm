@@ -63,18 +63,14 @@ public class MarkerItem {
 	}
 
 	public MarkerItem(Object uid, String title, String description, GeoPoint geoPoint) {
-		this.title = title;
-		this.description = description;
-		this.geoPoint = geoPoint;
-		this.uid = uid;
-		this.bearing = 0.0f;
+		this (uid, title, description, geoPoint, 0.0f);
 	}
 
 	public MarkerItem(Object uid, String title, String description, GeoPoint geoPoint, float bearing) {
+		this.uid = uid;
 		this.title = title;
 		this.description = description;
 		this.geoPoint = geoPoint;
-		this.uid = uid;
 		this.bearing = bearing;
 	}
 
@@ -106,7 +102,7 @@ public class MarkerItem {
 		mMarker = marker;
 	}
 
-	public void updateGeoPoint(GeoPoint geoPoint) {
+	public void setGeoPoint(GeoPoint geoPoint) {
 		this.geoPoint = geoPoint;
 	}
 
