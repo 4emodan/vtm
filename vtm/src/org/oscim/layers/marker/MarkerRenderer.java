@@ -33,18 +33,18 @@ public class MarkerRenderer extends BucketRenderer {
 
 	protected final MarkerSymbol mDefaultMarker;
 
-	private final SymbolBucket mSymbolLayer;
-	private final float[] mBox = new float[8];
-	private final MarkerLayer<MarkerItem> mMarkerLayer;
-	private final Point mMapPoint = new Point();
+	protected final SymbolBucket mSymbolLayer;
+	protected final float[] mBox = new float[8];
+	protected final MarkerLayer<MarkerItem> mMarkerLayer;
+	protected final Point mMapPoint = new Point();
 
 	/** increase view to show items that are partially visible */
 	protected int mExtents = 100;
 
 	/** flag to force update of markers */
-	private boolean mUpdate;
+	protected boolean mUpdate;
 
-	private InternalItem[] mItems;
+	protected InternalItem[] mItems;
 
 	static class InternalItem {
 		MarkerItem item;
