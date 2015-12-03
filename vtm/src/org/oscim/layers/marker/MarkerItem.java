@@ -48,7 +48,7 @@ public class MarkerItem {
 	public final Object uid;
 	public final String title;
 	public final String description;
-	public final GeoPoint geoPoint;
+	protected GeoPoint geoPoint;
 	protected MarkerSymbol mMarker;
 
 	/**
@@ -90,5 +90,9 @@ public class MarkerItem {
 
 	public void setMarker(MarkerSymbol marker) {
 		mMarker = marker;
+	}
+
+	public void updateGeoPoint(GeoPoint geoPoint) {
+		this.geoPoint = geoPoint;
 	}
 }
