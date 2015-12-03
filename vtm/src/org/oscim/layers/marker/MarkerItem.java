@@ -49,6 +49,7 @@ public class MarkerItem {
 	public final String title;
 	public final String description;
 	protected GeoPoint geoPoint;
+	protected float bearing; // angle, for rotation item about it's center
 	protected MarkerSymbol mMarker;
 
 	/**
@@ -66,6 +67,15 @@ public class MarkerItem {
 		this.description = description;
 		this.geoPoint = geoPoint;
 		this.uid = uid;
+		this.bearing = 0.0f;
+	}
+
+	public MarkerItem(Object uid, String title, String description, GeoPoint geoPoint, float bearing) {
+		this.title = title;
+		this.description = description;
+		this.geoPoint = geoPoint;
+		this.uid = uid;
+		this.bearing = bearing;
 	}
 
 	public Object getUid() {
@@ -84,6 +94,10 @@ public class MarkerItem {
 		return geoPoint;
 	}
 
+	public float getBearing() {
+		return bearing;
+	}
+
 	public MarkerSymbol getMarker() {
 		return mMarker;
 	}
@@ -94,5 +108,9 @@ public class MarkerItem {
 
 	public void updateGeoPoint(GeoPoint geoPoint) {
 		this.geoPoint = geoPoint;
+	}
+
+	public void updateBearing(float bearing) {
+		this.bearing = bearing;
 	}
 }
