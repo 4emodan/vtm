@@ -177,6 +177,29 @@ public class BucketRenderer extends LayerRenderer {
 		setMatrix(v.mvp, v, project, coordScale);
 	}
 
+	public void translateScaleRotateProject(GLViewport v, float to_x, float to_y, float angle) {
+		MapPosition oPos = mMapPosition;
+
+		double x = oPos.x - v.pos.x;
+		double y = oPos.y - v.pos.y;
+
+		if (mFlipOnDateLine) {
+			//wrap around date-line
+			while (x < 0.5)
+				x += 1.0;
+			while (x > 0.5)
+				x -= 1.0;
+		}
+
+		float scale = (float) (v.pos.scale / oPos.scale) / MapRenderer.COORD_SCALE;
+		v.mvp.setTransScale(to_x, to_y, scale);
+
+		v.rotate.setRotation(angle, 0.0f, 0.0f, 1.0f);
+		v.mvp.multiplyRhs(v.rotate); // Here RHS multiplication
+		v.mvp.multiplyLhs(v.view);
+	}
+
+
 	protected void setMatrix(GLMatrix mvp, GLViewport v, boolean project, float coordScale) {
 		MapPosition oPos = mMapPosition;
 
@@ -192,6 +215,7 @@ public class BucketRenderer extends LayerRenderer {
 			while (x > 0.5)
 				x -= 1.0;
 		}
+
 
 		mvp.setTransScale((float) (x * tileScale),
 		                  (float) (y * tileScale),
