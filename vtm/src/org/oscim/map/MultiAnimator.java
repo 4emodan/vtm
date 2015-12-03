@@ -174,17 +174,26 @@ public class MultiAnimator {
 			mState = mState | state;
 			long curTime = System.currentTimeMillis();
 
-			if((state & ANIM_MOVE) != 0)
+			if((state & ANIM_MOVE) != 0) {
+				mCurPos.setX(mStartPos.getX());
+				mCurPos.setY(mStartPos.getY());
 				mMoveEnd = curTime + (long) mMoveDuration;
+			}
 
-			if((state & ANIM_SCALE) != 0)
+			if((state & ANIM_SCALE) != 0) {
+				mCurPos.setScale(mStartPos.getScale());
 				mScaleEnd = curTime + (long) mScaleDuration;
+			}
 
-			if((state & ANIM_ROTATE) != 0)
+			if((state & ANIM_ROTATE) != 0) {
+				mCurPos.setBearing(mStartPos.getBearing());
 				mRotateEnd = curTime + (long) mRotateDuration;
+			}
 
-			if((state & ANIM_TILT) != 0)
+			if((state & ANIM_TILT) != 0) {
+				mCurPos.setTilt(mStartPos.getTilt());
 				mTiltEnd = curTime + (long) mTiltDuration;
+			}
 		}
 
 		mMap.render();
