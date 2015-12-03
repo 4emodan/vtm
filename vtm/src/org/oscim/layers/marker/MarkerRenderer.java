@@ -51,6 +51,7 @@ public class MarkerRenderer extends BucketRenderer {
 		boolean visible;
 		boolean changes;
 		float x, y;
+		Float angle;
 		double px, py;
 		float dy;
 
@@ -73,17 +74,7 @@ public class MarkerRenderer extends BucketRenderer {
 
 		mUpdate = false;
 
-		double mx = v.pos.x;
-		double my = v.pos.y;
-		double scale = Tile.SIZE * v.pos.scale;
-
-		//int changesInvisible = 0;
-		//int changedVisible = 0;
-		int numVisible = 0;
-
 		mMarkerLayer.map().viewport().getMapExtents(mBox, mExtents);
-
-		long flip = (long) (Tile.SIZE * v.pos.scale) >> 1;
 
 		if (mItems == null) {
 			if (buckets.get() != null) {
@@ -93,6 +84,12 @@ public class MarkerRenderer extends BucketRenderer {
 			return;
 		}
 
+		double mx = v.pos.x;
+		double my = v.pos.y;
+		double scale = Tile.SIZE * v.pos.scale;
+
+		int numVisible = 0;
+		long flip = (long) (Tile.SIZE * v.pos.scale) >> 1;
 		double angle = Math.toRadians(v.pos.bearing);
 		float cos = (float) Math.cos(angle);
 		float sin = (float) Math.sin(angle);
@@ -157,7 +154,8 @@ public class MarkerRenderer extends BucketRenderer {
 				marker = mDefaultMarker;
 
 			SymbolItem s = SymbolItem.pool.get();
-			s.set(it.x, it.y, marker.getBitmap(), true);
+			s.set(it.x, it.y, it.angle, marker.getBitmap(), true);
+
 			s.offset = marker.getHotspot();
 			s.billboard = marker.isBillboard();
 			mSymbolLayer.pushSymbol(s);
@@ -182,6 +180,7 @@ public class MarkerRenderer extends BucketRenderer {
 			MercatorProjection.project(it.item.getPoint(), mMapPoint);
 			it.px = mMapPoint.x;
 			it.py = mMapPoint.y;
+			it.angle = it.item.getBearing();
 		}
 		synchronized (this) {
 			mUpdate = true;

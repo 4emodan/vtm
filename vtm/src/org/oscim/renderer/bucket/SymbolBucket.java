@@ -148,11 +148,21 @@ public final class SymbolBucket extends TextureBucket {
 					}
 				}
 
+				angle = it.angle;
+				xCenter = it.x;
+				yCenter = it.y;
+				float tmpX = angle == null ? it.x : 0.0f;
+				float tmpY = angle == null ? it.y : 0.0f;
+
+				if (it.angle != null && mSymbols.size() > 1)
+					throw new RuntimeException("We support only one marker with rotation per bucket.");
+
 				/* add vertices */
-				short tx = (short) ((int) (SCALE * it.x) & LBIT_MASK
+
+				short tx = (short) ((int) (SCALE * tmpX) & LBIT_MASK
 				        | (it.billboard ? 1 : 0));
 
-				short ty = (short) (SCALE * it.y);
+				short ty = (short) (SCALE * tmpY);
 
 				vertexItems.add(tx, ty, x1, y1, u1, v2);
 				vertexItems.add(tx, ty, x1, y2, u1, v1);
