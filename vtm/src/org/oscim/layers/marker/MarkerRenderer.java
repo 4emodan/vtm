@@ -50,7 +50,8 @@ public class MarkerRenderer extends BucketRenderer {
 		MarkerItem item;
 		boolean visible;
 		boolean changes;
-		float x, y, angle;
+		float x, y;
+		Float angle;
 		double px, py;
 		float dy;
 
