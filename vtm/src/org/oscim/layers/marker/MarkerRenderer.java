@@ -19,15 +19,21 @@ package org.oscim.layers.marker;
 
 import java.util.Comparator;
 
+import org.oscim.core.MapPosition;
 import org.oscim.core.MercatorProjection;
 import org.oscim.core.Point;
 import org.oscim.core.Tile;
 import org.oscim.renderer.BucketRenderer;
+import org.oscim.renderer.GLState;
 import org.oscim.renderer.GLViewport;
+import org.oscim.renderer.bucket.RenderBucket;
 import org.oscim.renderer.bucket.SymbolBucket;
 import org.oscim.renderer.bucket.SymbolItem;
+import org.oscim.renderer.bucket.TextureBucket;
 import org.oscim.utils.TimSort;
 import org.oscim.utils.geom.GeometryUtils;
+
+import static org.oscim.renderer.bucket.RenderBucket.SYMBOL;
 
 public class MarkerRenderer extends BucketRenderer {
 
@@ -134,6 +140,31 @@ public class MarkerRenderer extends BucketRenderer {
 		buckets.prepare();
 
 		compile();
+	}
+
+	@Override
+	public synchronized void render(GLViewport v) {
+		GLState.test(false, false);
+		GLState.blend(true);
+
+		MapPosition layerPos = mMapPosition;
+		float div;
+
+		RenderBucket b = buckets.get();
+		for (InternalItem it : mItems) {
+			setMatrix(v, false);
+			div = (float) (v.pos.scale / layerPos.scale);
+
+			switch (b.type) {
+				case SYMBOL:
+					buckets.bind();
+					b = TextureBucket.Renderer.draw(b, v, div);
+					break;
+				default:
+					b = b.next;
+					break;
+			}
+		}
 	}
 
 	protected int countVisibleItems(double bearing, double mx, double my, double scale) {
