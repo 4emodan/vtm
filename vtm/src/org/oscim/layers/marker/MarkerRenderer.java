@@ -130,7 +130,10 @@ public class MarkerRenderer extends BucketRenderer {
 				marker = mDefaultMarker;
 
 			SymbolItem s = SymbolItem.pool.get();
-			s.set(it.x, it.y, marker.getBitmap(), true);
+			if (it.angle == null)
+				s.set(it.x, it.y, marker.getBitmap(), true);
+			else
+				s.set(0.0f, 0.0f, marker.getBitmap(), true);
 			s.offset = marker.getHotspot();
 			s.billboard = marker.isBillboard();
 			mSymbolLayer.pushSymbol(s);
@@ -152,17 +155,19 @@ public class MarkerRenderer extends BucketRenderer {
 
 		RenderBucket b = buckets.get();
 		for (InternalItem it : mItems) {
-			setMatrix(v, false);
-			div = (float) (v.pos.scale / layerPos.scale);
+			if (it.angle == null) {
+				setMatrix(v, false);
+				div = (float) (v.pos.scale / layerPos.scale);
+			} else {
+				translateScaleRotateProject(v, it.x, it.y, it.angle);
+				div = 1.0f;
+			}
 
-			switch (b.type) {
-				case SYMBOL:
-					buckets.bind();
-					b = TextureBucket.Renderer.draw(b, v, div);
-					break;
-				default:
-					b = b.next;
-					break;
+			if (b.type == SYMBOL) {
+				buckets.bind();
+				b = TextureBucket.Renderer.draw(b, v, div);
+			} else {
+				b = b.next;
 			}
 		}
 	}
