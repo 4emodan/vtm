@@ -120,6 +120,13 @@ public class VectorLayer extends AbstractVectorLayer<Drawable> {
 	}
 
 	/**
+	 * Removes all drawables from the list of drawn geometries.
+	 */
+	public synchronized void clear() {
+		mDrawables.clear();
+	}
+
+	/**
 	 * Removes the drawable from the list of drawn geometries.
 	 * 
 	 * @param drawable
