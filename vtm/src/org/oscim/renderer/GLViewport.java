@@ -11,8 +11,6 @@ public class GLViewport extends Viewport {
 	/** Do not modify! */
 	public final GLMatrix proj = mProjMatrix;
 	/** Do not modify! */
-	public final GLMatrix rotate = mRotationMatrix;
-	/** Do not modify! */
 	public final GLMatrix view = mViewMatrix;
 	/** Do not modify! */
 	public final float[] plane = new float[8];

@@ -185,8 +185,10 @@ public class BucketRenderer extends LayerRenderer {
 		float scale = (float) (v.pos.scale / oPos.scale) / MapRenderer.COORD_SCALE;
 		v.mvp.setTransScale(to_x, to_y, scale);
 
-		v.rotate.setRotation(angle, 0.0f, 0.0f, 1.0f);
-		v.mvp.multiplyRhs(v.rotate); // Here RHS multiplication
+		GLMatrix workspace = new GLMatrix();
+		workspace.setRotation(angle, 0.0f, 0.0f, 1.0f);
+
+		v.mvp.multiplyRhs(workspace); // Here RHS multiplication
 		v.mvp.multiplyLhs(v.view);
 	}
 
