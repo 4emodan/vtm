@@ -106,7 +106,7 @@ public class MarkerItem {
 		this.geoPoint = geoPoint;
 	}
 
-	public void setBearing(float bearing) {
+	public void setBearing(Float bearing) {
 		this.bearing = bearing;
 	}
 }
