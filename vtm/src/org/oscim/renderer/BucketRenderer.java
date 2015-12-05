@@ -168,6 +168,20 @@ public class BucketRenderer extends LayerRenderer {
 		setMatrix(v.mvp, v, project, coordScale);
 	}
 
+	public void translateScaleRotateProject(GLViewport v, float toX, float toY, float angle) {
+		MapPosition oPos = mMapPosition;
+
+		float scale = (float) (v.pos.scale / oPos.scale) / MapRenderer.COORD_SCALE;
+		v.mvp.setTransScale(toX, toY, scale);
+
+		GLMatrix workspace = new GLMatrix();
+		workspace.setRotation(angle, 0.0f, 0.0f, 1.0f);
+
+		v.mvp.multiplyRhs(workspace); // Here RHS multiplication
+		v.mvp.multiplyLhs(v.view);
+	}
+
+
 	protected void setMatrix(GLMatrix mvp, GLViewport v, boolean project, float coordScale) {
 		MapPosition oPos = mMapPosition;
 

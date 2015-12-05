@@ -19,15 +19,21 @@ package org.oscim.layers.marker;
 
 import java.util.Comparator;
 
+import org.oscim.core.MapPosition;
 import org.oscim.core.MercatorProjection;
 import org.oscim.core.Point;
 import org.oscim.core.Tile;
 import org.oscim.renderer.BucketRenderer;
+import org.oscim.renderer.GLState;
 import org.oscim.renderer.GLViewport;
+import org.oscim.renderer.bucket.RenderBucket;
 import org.oscim.renderer.bucket.SymbolBucket;
 import org.oscim.renderer.bucket.SymbolItem;
+import org.oscim.renderer.bucket.TextureBucket;
 import org.oscim.utils.TimSort;
 import org.oscim.utils.geom.GeometryUtils;
+
+import static org.oscim.renderer.bucket.RenderBucket.SYMBOL;
 
 public class MarkerRenderer extends BucketRenderer {
 
@@ -51,6 +57,7 @@ public class MarkerRenderer extends BucketRenderer {
 		boolean visible;
 		boolean changes;
 		float x, y;
+		Float angle;
 		double px, py;
 		float dy;
 
@@ -73,17 +80,10 @@ public class MarkerRenderer extends BucketRenderer {
 
 		mUpdate = false;
 
-		double mx = v.pos.x;
-		double my = v.pos.y;
-		double scale = Tile.SIZE * v.pos.scale;
-
 		//int changesInvisible = 0;
 		//int changedVisible = 0;
-		int numVisible = 0;
 
 		mMarkerLayer.map().viewport().getMapExtents(mBox, mExtents);
-
-		long flip = (long) (Tile.SIZE * v.pos.scale) >> 1;
 
 		if (mItems == null) {
 			if (buckets.get() != null) {
@@ -93,37 +93,10 @@ public class MarkerRenderer extends BucketRenderer {
 			return;
 		}
 
-		double angle = Math.toRadians(v.pos.bearing);
-		float cos = (float) Math.cos(angle);
-		float sin = (float) Math.sin(angle);
-
-		/* check visibility */
-		for (InternalItem it : mItems) {
-			it.changes = false;
-			it.x = (float) ((it.px - mx) * scale);
-			it.y = (float) ((it.py - my) * scale);
-
-			if (it.x > flip)
-				it.x -= (flip << 1);
-			else if (it.x < -flip)
-				it.x += (flip << 1);
-
-			if (!GeometryUtils.pointInPoly(it.x, it.y, mBox, 8, 0)) {
-				if (it.visible) {
-					it.changes = true;
-					//changesInvisible++;
-				}
-				continue;
-			}
-
-			it.dy = sin * it.x + cos * it.y;
-
-			if (!it.visible) {
-				it.visible = true;
-				//changedVisible++;
-			}
-			numVisible++;
-		}
+		double mx = v.pos.x;
+		double my = v.pos.y;
+		double scale = Tile.SIZE * v.pos.scale;
+		int numVisible = countVisibleItems(v.pos.getBearing(), mx, my, scale);
 
 		//log.debug(numVisible + " " + changedVisible + " " + changesInvisible);
 
@@ -157,7 +130,10 @@ public class MarkerRenderer extends BucketRenderer {
 				marker = mDefaultMarker;
 
 			SymbolItem s = SymbolItem.pool.get();
-			s.set(it.x, it.y, marker.getBitmap(), true);
+			if (it.angle == null)
+				s.set(it.x, it.y, marker.getBitmap(), true);
+			else
+				s.set(0.0f, 0.0f, marker.getBitmap(), true);
 			s.offset = marker.getHotspot();
 			s.billboard = marker.isBillboard();
 			mSymbolLayer.pushSymbol(s);
@@ -167,6 +143,69 @@ public class MarkerRenderer extends BucketRenderer {
 		buckets.prepare();
 
 		compile();
+	}
+
+	@Override
+	public synchronized void render(GLViewport v) {
+		GLState.test(false, false);
+		GLState.blend(true);
+
+		MapPosition layerPos = mMapPosition;
+		float div;
+
+		RenderBucket b = buckets.get();
+		for (InternalItem it : mItems) {
+			if (it.angle == null) {
+				setMatrix(v, false);
+				div = (float) (v.pos.scale / layerPos.scale);
+			} else {
+				translateScaleRotateProject(v, it.x, it.y, it.angle);
+				div = 1.0f;
+			}
+
+			if (b.type == SYMBOL) {
+				buckets.bind();
+				b = TextureBucket.Renderer.draw(b, v, div);
+			} else {
+				b = b.next;
+			}
+		}
+	}
+
+	protected int countVisibleItems(double bearing, double mx, double my, double scale) {
+		double angle = Math.toRadians(bearing);
+		float cos = (float) Math.cos(angle);
+		float sin = (float) Math.sin(angle);
+		long flip = (long) (Tile.SIZE * scale) >> 1;
+
+		int numVisible = 0;
+		for (InternalItem it : mItems) {
+			it.changes = false;
+			it.x = (float) ((it.px - mx) * scale);
+			it.y = (float) ((it.py - my) * scale);
+
+			if (it.x > flip)
+				it.x -= (flip << 1);
+			else if (it.x < -flip)
+				it.x += (flip << 1);
+
+			if (!GeometryUtils.pointInPoly(it.x, it.y, mBox, 8, 0)) {
+				if (it.visible) {
+					it.changes = true;
+					//changesInvisible++;
+				}
+				continue;
+			}
+
+			it.dy = sin * it.x + cos * it.y;
+
+			if (!it.visible) {
+				it.visible = true;
+				//changedVisible++;
+			}
+			numVisible++;
+		}
+		return numVisible;
 	}
 
 	protected void populate(int size) {
@@ -182,6 +221,7 @@ public class MarkerRenderer extends BucketRenderer {
 			MercatorProjection.project(it.item.getPoint(), mMapPoint);
 			it.px = mMapPoint.x;
 			it.py = mMapPoint.y;
+			it.angle = it.item.getBearing();
 		}
 		synchronized (this) {
 			mUpdate = true;
