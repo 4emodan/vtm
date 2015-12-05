@@ -237,6 +237,10 @@ public class ItemizedLayer<Item extends MarkerItem> extends MarkerLayer<Item>
 		public boolean run(int aIndex);
 	}
 
+	public void itemsUpdate() {
+		populate();
+	}
+
 	@Override
 	public boolean onGesture(Gesture g, MotionEvent e) {
 		if (g instanceof Gesture.Tap)
