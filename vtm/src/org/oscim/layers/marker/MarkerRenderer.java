@@ -130,10 +130,10 @@ public class MarkerRenderer extends BucketRenderer {
 				marker = mDefaultMarker;
 
 			SymbolItem s = SymbolItem.pool.get();
-			if (it.angle == null)
+//			if (it.angle == null)
 				s.set(it.x, it.y, marker.getBitmap(), true);
-			else
-				s.set(0.0f, 0.0f, marker.getBitmap(), true);
+//			else
+//				s.set(0.0f, 0.0f, marker.getBitmap(), true);
 			s.offset = marker.getHotspot();
 			s.billboard = marker.isBillboard();
 			mSymbolLayer.pushSymbol(s);
@@ -144,7 +144,7 @@ public class MarkerRenderer extends BucketRenderer {
 
 		compile();
 	}
-
+/*
 	@Override
 	public synchronized void render(GLViewport v) {
 		GLState.test(false, false);
@@ -171,7 +171,7 @@ public class MarkerRenderer extends BucketRenderer {
 			}
 		}
 	}
-
+*/
 	protected int countVisibleItems(double bearing, double mx, double my, double scale) {
 		double angle = Math.toRadians(bearing);
 		float cos = (float) Math.cos(angle);
