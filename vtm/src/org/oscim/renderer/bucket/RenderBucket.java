@@ -45,6 +45,10 @@ public abstract class RenderBucket extends Inlist<RenderBucket> {
 	protected final VertexData vertexItems;
 	protected final VertexData indiceItems;
 
+	public Float xCenter;
+	public Float yCenter;
+	public Float angle;
+
 	final static VertexData EMPTY = new VertexData();
 	final boolean quads;
 

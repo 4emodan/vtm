@@ -131,7 +131,7 @@ public class MarkerRenderer extends BucketRenderer {
 
 			SymbolItem s = SymbolItem.pool.get();
 //			if (it.angle == null)
-				s.set(it.x, it.y, marker.getBitmap(), true);
+				s.set(it.x, it.y, it.angle, marker.getBitmap(), true);
 //			else
 //				s.set(0.0f, 0.0f, marker.getBitmap(), true);
 			s.offset = marker.getHotspot();

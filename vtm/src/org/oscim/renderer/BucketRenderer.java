@@ -125,10 +125,12 @@ public class BucketRenderer extends LayerRenderer {
 					b = BitmapBucket.Renderer.draw(b, v, 1, 1);
 					break;
 				case SYMBOL:
-					if (project) {
-						project = false;
+					if (b.angle != null) {
+						translateScaleRotateProject(v, b.xCenter, b.yCenter, b.angle);
+					}else if (project) {
 						setMatrix(v, project);
 					}
+					project = false;
 					b = TextureBucket.Renderer.draw(b, v, div);
 					break;
 				default:
