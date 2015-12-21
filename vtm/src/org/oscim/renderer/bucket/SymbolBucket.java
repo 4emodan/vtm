@@ -154,6 +154,9 @@ public final class SymbolBucket extends TextureBucket {
 				float tmpX = angle == null ? it.x : 0.0f;
 				float tmpY = angle == null ? it.y : 0.0f;
 
+				if (it.angle != null && mSymbols.size() != 0)
+					throw new RuntimeException("We support only one marker with rotation per bucket.");
+
 				/* add vertices */
 
 				short tx = (short) ((int) (SCALE * tmpX) & LBIT_MASK
