@@ -45,6 +45,8 @@ public class SymbolItem extends Inlist<SymbolItem> {
 	public float x;
 	public float y;
 
+	public Float angle;
+
 	public TextureRegion texRegion;
 	public Bitmap bitmap;
 	public PointF offset;
@@ -56,9 +58,10 @@ public class SymbolItem extends Inlist<SymbolItem> {
 		this.billboard = billboard;
 	}
 
-	public void set(float x, float y, Bitmap bitmap, boolean billboard) {
+	public void set(float x, float y, Float angle, Bitmap bitmap, boolean billboard) {
 		this.x = x;
 		this.y = y;
+		this.angle = angle;
 		this.bitmap = bitmap;
 		this.billboard = billboard;
 	}

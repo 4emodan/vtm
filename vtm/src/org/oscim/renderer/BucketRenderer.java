@@ -80,6 +80,12 @@ public class BucketRenderer extends LayerRenderer {
 		}
 	}
 
+	enum CurrentMatrix {
+		VIEWPROJECT,
+		PROJECT,
+		TRANSLATESCALEROTATEPROJECT
+	}
+
 	/**
 	 * Render all 'buckets'
 	 */
@@ -92,17 +98,16 @@ public class BucketRenderer extends LayerRenderer {
 
 		float div = (float) (v.pos.scale / layerPos.scale);
 
-		boolean project = true;
-
-		setMatrix(v, project);
+		CurrentMatrix currentMatrix = CurrentMatrix.VIEWPROJECT;
+		setMatrix(v, true);
 
 		for (RenderBucket b = buckets.get(); b != null;) {
 
 			buckets.bind();
 
-			if (!project && b.type != SYMBOL) {
-				project = true;
-				setMatrix(v, project);
+			if (currentMatrix != CurrentMatrix.VIEWPROJECT && b.type != SYMBOL) {
+				currentMatrix = CurrentMatrix.VIEWPROJECT;
+				setMatrix(v, true);
 			}
 
 			switch (b.type) {
@@ -125,9 +130,12 @@ public class BucketRenderer extends LayerRenderer {
 					b = BitmapBucket.Renderer.draw(b, v, 1, 1);
 					break;
 				case SYMBOL:
-					if (project) {
-						project = false;
-						setMatrix(v, project);
+					if (b.angle != null) {
+						currentMatrix = CurrentMatrix.TRANSLATESCALEROTATEPROJECT;
+						translateScaleRotateProject(v, b.xCenter, b.yCenter, b.angle);
+					} else if (currentMatrix != CurrentMatrix.PROJECT) {
+						currentMatrix = CurrentMatrix.PROJECT;
+						setMatrix(v, false);
 					}
 					b = TextureBucket.Renderer.draw(b, v, div);
 					break;
