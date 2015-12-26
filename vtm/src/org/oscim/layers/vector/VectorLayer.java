@@ -184,7 +184,7 @@ public class VectorLayer extends AbstractVectorLayer<Drawable> {
 
 		bbox.scale(1E6);
 
-		int level = 0;
+		int level = -2;
 		Style lastStyle = null;
 
 		/* go through features, find the matching style and draw */
@@ -195,12 +195,12 @@ public class VectorLayer extends AbstractVectorLayer<Drawable> {
 
 			for (Drawable d : tmpDrawables) {
 				Style style = d.getStyle();
-				draw(t, level, d, style);
 
 				if (style != lastStyle)
 					level += 2;
-
 				lastStyle = style;
+
+				draw(t, level, d, style);
 			}
 		}
 	}
