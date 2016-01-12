@@ -159,8 +159,8 @@ public class GeoPoint implements Comparable<GeoPoint> {
 	// Theodore Hong
 	// ===========================================================
 
-	public static final float DEG2RAD = (float) (Math.PI / 180.0);
-	public static final float RAD2DEG = (float) (180.0 / Math.PI);
+	public static final double DEG2RAD = (Math.PI / 180.0);
+	public static final double RAD2DEG = (180.0 / Math.PI);
 	// http://en.wikipedia.org/wiki/Earth_radius#Equatorial_radius
 	public static final int RADIUS_EARTH_METERS = 6378137;
 
@@ -192,7 +192,8 @@ public class GeoPoint implements Comparable<GeoPoint> {
 
 		double t3 = Math.sin(a1) * Math.sin(b1);
 
-		double tt = Math.acos(t1 + t2 + t3);
+		// if points are equal t1 + t2 + t3 can be 1.0 + eps
+		double tt = Math.acos(Math.min(t1 + t2 + t3, 1.0));
 
 		return (RADIUS_EARTH_METERS * tt);
 	}
