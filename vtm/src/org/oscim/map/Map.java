@@ -92,8 +92,7 @@ public abstract class Map implements TaskQueue {
 	private final ViewController mViewport;
 	private final AsyncExecutor mAsyncExecutor;
 
-	protected final Animator mAnimator;
-	protected final MultiAnimator mMultiAnimator;
+	protected Animator mAnimator;
 	protected final MapPosition mMapPosition;
 
 	protected final MapEventLayer mEventLayer;
@@ -108,7 +107,6 @@ public abstract class Map implements TaskQueue {
 
 		mViewport = new ViewController();
 		mAnimator = new Animator(this);
-		mMultiAnimator = new MultiAnimator(this);
 		mLayers = new Layers(this);
 
 		input = new EventDispatcher<InputListener, MotionEvent>() {
@@ -319,11 +317,8 @@ public abstract class Map implements TaskQueue {
 		return mAnimator;
 	}
 
-	/**
-	 * @return MultiMapAnimator instance
-	 */
-	public MultiAnimator multiAnimator() {
-		return mMultiAnimator;
+	public void setAnimator(Animator animator) {
+		mAnimator = animator;
 	}
 
 	/**
@@ -337,7 +332,6 @@ public abstract class Map implements TaskQueue {
 		MapPosition pos = mMapPosition;
 
 		mAnimator.updateAnimation();
-		mMultiAnimator.updateAnimation();
 
 		boolean changed = mViewport.getMapPosition(pos);
 
@@ -351,7 +345,6 @@ public abstract class Map implements TaskQueue {
 		mClearMap = false;
 
 		mAnimator.updateAnimation();
-		mMultiAnimator.updateAnimation();
 
 		mViewport.syncViewport();
 	}

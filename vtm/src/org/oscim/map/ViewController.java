@@ -77,7 +77,7 @@ public class ViewController extends Viewport {
 	}
 
 	/* used by MapAnimator */
-	void moveTo(double x, double y) {
+	public void moveTo(double x, double y) {
 		mPos.x = x;
 		mPos.y = y;
 
