@@ -53,6 +53,14 @@ public class ViewController extends Viewport {
 		updateMatrices();
 	}
 
+	public int getHeight() {
+		return (int)mHeight;
+	}
+
+	public int getWidth() {
+		return (int)mWidth;
+	}
+
 	/**
 	 * Set pivot height relative to screen center. E.g. 0.5 is usually preferred
 	 * for navigation, moving the center to 25% of the screen height.
