@@ -203,7 +203,7 @@ public class Animator {
 	/**
 	 * called by MapRenderer at begin of each frame.
 	 */
-	public void updateAnimation() {
+	void updateAnimation() {
 		if (mState == ANIM_NONE)
 			return;
 

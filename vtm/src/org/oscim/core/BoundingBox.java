@@ -85,10 +85,10 @@ public class BoundingBox {
 	 *         otherwise.
 	 */
 	public boolean contains(GeoPoint geoPoint) {
-		return geoPoint.getLatitudeE6() <= maxLatitudeE6
-		        && geoPoint.getLatitudeE6() >= minLatitudeE6
-		        && geoPoint.getLongitudeE6() <= maxLongitudeE6
-		        && geoPoint.getLongitudeE6() >= minLongitudeE6;
+		return geoPoint.latitudeE6 <= maxLatitudeE6
+		        && geoPoint.latitudeE6 >= minLatitudeE6
+		        && geoPoint.longitudeE6 <= maxLongitudeE6
+		        && geoPoint.longitudeE6 >= minLongitudeE6;
 	}
 
 	@Override
@@ -195,10 +195,10 @@ public class BoundingBox {
 		int maxLon = Integer.MIN_VALUE;
 		for (final GeoPoint gp : partialPolyLine) {
 
-			minLat = Math.min(minLat, gp.getLatitudeE6());
-			minLon = Math.min(minLon, gp.getLongitudeE6());
-			maxLat = Math.max(maxLat, gp.getLatitudeE6());
-			maxLon = Math.max(maxLon, gp.getLongitudeE6());
+			minLat = Math.min(minLat, gp.latitudeE6);
+			minLon = Math.min(minLon, gp.longitudeE6);
+			maxLat = Math.max(maxLat, gp.latitudeE6);
+			maxLon = Math.max(maxLon, gp.longitudeE6);
 		}
 
 		return new BoundingBox(minLat, minLon, maxLat, maxLon);

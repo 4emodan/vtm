@@ -104,9 +104,9 @@ public final class MercatorProjection {
 		if (reuse == null)
 			reuse = new Point();
 
-		reuse.x = (p.getLongitude() + 180.0) / 360.0;
+		reuse.x = ((p.longitudeE6 / 1E6) + 180.0) / 360.0;
 
-		double sinLatitude = Math.sin(p.getLatitude() * (Math.PI / 180.0));
+		double sinLatitude = Math.sin((p.latitudeE6 / 1E6) * (Math.PI / 180.0));
 		reuse.y = 0.5 - Math.log((1.0 + sinLatitude) / (1.0 - sinLatitude)) / (4.0 * Math.PI);
 
 		return reuse;
@@ -114,9 +114,9 @@ public final class MercatorProjection {
 
 	public static void project(GeoPoint p, double[] out, int pos) {
 
-		out[pos * 2] = (p.getLongitude() + 180.0) / 360.0;
+		out[pos * 2] = ((p.longitudeE6 / 1E6) + 180.0) / 360.0;
 
-		double sinLatitude = Math.sin(p.getLatitude() * (Math.PI / 180.0));
+		double sinLatitude = Math.sin((p.latitudeE6 / 1E6) * (Math.PI / 180.0));
 		out[pos * 2 + 1] = 0.5 - Math.log((1.0 + sinLatitude) / (1.0 - sinLatitude))
 		        / (4.0 * Math.PI);
 	}

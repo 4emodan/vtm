@@ -32,12 +32,12 @@ public class GeoPoint implements Comparable<GeoPoint> {
 	/**
 	 * The latitude value of this GeoPoint in microdegrees (degrees * 10^6).
 	 */
-	private final double latitude;
+	public final int latitudeE6;
 
 	/**
 	 * The longitude value of this GeoPoint in microdegrees (degrees * 10^6).
 	 */
-	private final double longitude;
+	public final int longitudeE6;
 
 	/**
 	 * The hash code of this object.
@@ -56,11 +56,11 @@ public class GeoPoint implements Comparable<GeoPoint> {
 		lat = FastMath.clamp(lat,
 		                     MercatorProjection.LATITUDE_MIN,
 		                     MercatorProjection.LATITUDE_MAX);
-		this.latitude = lat;
+		this.latitudeE6 = (int) (lat * CONVERSION_FACTOR);
 		lon = FastMath.clamp(lon,
 		                     MercatorProjection.LONGITUDE_MIN,
 		                     MercatorProjection.LONGITUDE_MAX);
-		this.longitude = lon;
+		this.longitudeE6 = (int) (lon * CONVERSION_FACTOR);
 	}
 
 	/**
@@ -76,19 +76,19 @@ public class GeoPoint implements Comparable<GeoPoint> {
 	}
 
 	public void project(Point out) {
-		out.x = MercatorProjection.longitudeToX(longitude);
-		out.y = MercatorProjection.latitudeToY(latitude);
+		out.x = MercatorProjection.longitudeToX(this.longitudeE6 / CONVERSION_FACTOR);
+		out.y = MercatorProjection.latitudeToY(this.latitudeE6 / CONVERSION_FACTOR);
 	}
 
 	@Override
 	public int compareTo(GeoPoint geoPoint) {
-		if (this.getLongitudeE6() > geoPoint.getLongitudeE6()) {
+		if (this.longitudeE6 > geoPoint.longitudeE6) {
 			return 1;
-		} else if (this.getLongitudeE6() < geoPoint.getLongitudeE6()) {
+		} else if (this.longitudeE6 < geoPoint.longitudeE6) {
 			return -1;
-		} else if (this.getLatitudeE6() > geoPoint.getLatitudeE6()) {
+		} else if (this.latitudeE6 > geoPoint.latitudeE6) {
 			return 1;
-		} else if (this.getLatitudeE6() < geoPoint.getLatitudeE6()) {
+		} else if (this.latitudeE6 < geoPoint.latitudeE6) {
 			return -1;
 		}
 		return 0;
@@ -102,9 +102,9 @@ public class GeoPoint implements Comparable<GeoPoint> {
 			return false;
 		}
 		GeoPoint other = (GeoPoint) obj;
-		if (this.getLatitudeE6() != other.getLatitudeE6()) {
+		if (this.latitudeE6 != other.latitudeE6) {
 			return false;
-		} else if (this.getLongitudeE6() != other.getLongitudeE6()) {
+		} else if (this.longitudeE6 != other.longitudeE6) {
 			return false;
 		}
 		return true;
@@ -114,22 +114,14 @@ public class GeoPoint implements Comparable<GeoPoint> {
 	 * @return the latitude value of this GeoPoint in degrees.
 	 */
 	public double getLatitude() {
-		return latitude;
+		return this.latitudeE6 / CONVERSION_FACTOR;
 	}
 
 	/**
 	 * @return the longitude value of this GeoPoint in degrees.
 	 */
 	public double getLongitude() {
-		return longitude;
-	}
-
-	public int getLatitudeE6() {
-		return (int) (latitude * CONVERSION_FACTOR);
-	}
-
-	public int getLongitudeE6() {
-		return (int) (longitude * CONVERSION_FACTOR);
+		return this.longitudeE6 / CONVERSION_FACTOR;
 	}
 
 	@Override
@@ -156,8 +148,8 @@ public class GeoPoint implements Comparable<GeoPoint> {
 	 */
 	private int calculateHashCode() {
 		int result = 7;
-		result = 31 * result + this.getLatitudeE6();
-		result = 31 * result + this.getLongitudeE6();
+		result = 31 * result + this.latitudeE6;
+		result = 31 * result + this.longitudeE6;
 		return result;
 	}
 
@@ -167,8 +159,8 @@ public class GeoPoint implements Comparable<GeoPoint> {
 	// Theodore Hong
 	// ===========================================================
 
-	public static final double DEG2RAD = (Math.PI / 180.0);
-	public static final double RAD2DEG = (180.0 / Math.PI);
+	public static final float DEG2RAD = (float) (Math.PI / 180.0);
+	public static final float RAD2DEG = (float) (180.0 / Math.PI);
 	// http://en.wikipedia.org/wiki/Earth_radius#Equatorial_radius
 	public static final int RADIUS_EARTH_METERS = 6378137;
 
@@ -179,10 +171,10 @@ public class GeoPoint implements Comparable<GeoPoint> {
 	 * @return distance in meters
 	 */
 	public double distanceTo(GeoPoint other) {
-		return distance(latitude,
-		                longitude,
-		                other.latitude,
-		                other.longitude);
+		return distance(latitudeE6 / 1E6,
+		                longitudeE6 / 1E6,
+		                other.latitudeE6 / 1E6,
+		                other.longitudeE6 / 1E6);
 	}
 
 	public static double distance(double lat1, double lon1, double lat2, double lon2) {
@@ -200,8 +192,7 @@ public class GeoPoint implements Comparable<GeoPoint> {
 
 		double t3 = Math.sin(a1) * Math.sin(b1);
 
-		// if points are equal t1 + t2 + t3 can be 1.0 + eps
-		double tt = Math.acos(Math.min(t1 + t2 + t3, 1.0));
+		double tt = Math.acos(t1 + t2 + t3);
 
 		return (RADIUS_EARTH_METERS * tt);
 	}

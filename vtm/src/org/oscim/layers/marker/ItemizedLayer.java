@@ -181,8 +181,8 @@ public class ItemizedLayer<Item extends MarkerItem> extends MarkerLayer<Item>
 		for (int i = 0; i < size; i++) {
 			Item item = mItemList.get(i);
 
-			if (!box.contains(item.geoPoint.getLongitudeE6(),
-			                  item.geoPoint.getLatitudeE6()))
+			if (!box.contains(item.geoPoint.longitudeE6,
+			                  item.geoPoint.latitudeE6))
 				continue;
 
 			mapPosition.toScreenPoint(item.getPoint(), mTmpPoint);
