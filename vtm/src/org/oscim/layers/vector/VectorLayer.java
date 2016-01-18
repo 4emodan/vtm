@@ -309,15 +309,19 @@ public class VectorLayer extends AbstractVectorLayer<Drawable> {
 					style.fillAlpha));
 		}
 
-		GeometryBuffer geom = new GeometryBuffer(strip.getPoints().size(), (strip.getPoints().size() - 2) * 3);
-		geom.type = GeometryBuffer.GeometryType.TRIS;
-		for(GeoPoint point : strip.getPoints()) {
-			mConverter.addPoint(geom, point.getLongitude(), point.getLatitude());
-		}
-		for (int i = 0; i < strip.getPoints().size() - 2; ++i) {
-			geom.index[i * 3 + 0] = i + 0;
-			geom.index[i * 3 + 1] = i + 1;
-			geom.index[i * 3 + 2] = i + 2;
+		GeometryBuffer geom;
+		synchronized (strip) {
+			// FIXME Use preallocated buffer
+			geom = new GeometryBuffer(strip.getPoints().size(), (strip.getPoints().size() - 2) * 3);
+			geom.type = GeometryBuffer.GeometryType.TRIS;
+			for (GeoPoint point : strip.getPoints()) {
+				mConverter.addPoint(geom, point.getLongitude(), point.getLatitude());
+			}
+			for (int i = 0; i < strip.getPoints().size() - 2; ++i) {
+				geom.index[i * 3 + 0] = i + 0;
+				geom.index[i * 3 + 1] = i + 1;
+				geom.index[i * 3 + 2] = i + 2;
+			}
 		}
 
 		mesh.addIndexedMesh(geom);
