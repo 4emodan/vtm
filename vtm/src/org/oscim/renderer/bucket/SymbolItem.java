@@ -34,6 +34,7 @@ public class SymbolItem extends Inlist<SymbolItem> {
 		@Override
 		protected boolean clearItem(SymbolItem it) {
 			// drop references
+			it.angle = null;
 			it.bitmap = null;
 			it.texRegion = null;
 			it.offset = null;
@@ -54,6 +55,7 @@ public class SymbolItem extends Inlist<SymbolItem> {
 	public void set(float x, float y, TextureRegion texture, boolean billboard) {
 		this.x = x;
 		this.y = y;
+		this.angle = null;
 		this.texRegion = texture;
 		this.billboard = billboard;
 	}
