@@ -23,13 +23,16 @@
   <style-area id="tex1" src="textures/rough.png" />
 
   <!-- meadow|garden -->
-  <style-area id="greens" use="tex1" fill="#c9dc91" fade="10" />
+  <style-area id="greens" use="tex1" fill="#49ba2f" fade="10" />
 
   <!-- grass -->
   <style-area id="lightgreen" use="tex1" fill="#d3dcb9" fade="12" />
 
   <!-- grassland|scrub -->
-  <style-area id="darkgreen" use="tex1" fill="#c2cba5" fade="10" />
+  <style-area id="darkgreen" use="tex1" fill="#41ae28" fade="10" />
+
+  <style-area id="darkgreen4tile" use="tex1" fill="#6bc04b" fade="10" />
+  <style-area id="lightgreen4tile" use="tex1" fill="#a1d784" fade="10" />
 
   <style-area id="farmland" use="tex1" fill="#e4dab5" fade="12" stroke="#d1dbc7" stroke-width="1.0" />
 
@@ -151,9 +154,20 @@
   <!-- all closed ways that are not 'highway' or 'building' -->
 
   <m e="way" k="highway|building" v="~" closed="yes">
+    <!-- tile layer -->
+    <m k="tilelayer">
+
+    </m>
 
     <!-- landuse base -->
     <m k="landuse">
+      <m v="tiledarkgreen">
+        <area use="darkgreen4tile" />
+      </m>
+      <m v="tilelightgreen">
+        <area use="lightgreen4tile" />
+      </m>
+
       <m v="urban">
         <area fill="#f4f3f0" />
       </m>

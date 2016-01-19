@@ -31,6 +31,9 @@
   <!-- grassland|scrub -->
   <style-area id="darkgreen" use="tex1" fill="#3D345A" fade="10" />
 
+  <style-area id="darkgreen4tile" use="tex1" fill="#943faf" fade="10" />
+  <style-area id="lightgreen4tile" use="tex1" fill="#5e287b" fade="10" />
+
   <style-area id="farmland" use="tex1" fill="#1B254A" fade="12" stroke="#2E2438" stroke-width="1.0" />
 
   <!-- <style-area id="greens" fill="#2D1A31" fade="10" /> -->
@@ -151,9 +154,25 @@
   <!-- all closed ways that are not 'highway' or 'building' -->
 
   <m e="way" k="highway|building" v="~" closed="yes">
+    <!-- tile layer -->
+    <m k="tilelayer">
+      <m v="tiledarkgreen">
+        <area use="darkgreen4tile" />
+      </m>
+      <m v="tilelightgreen">
+        <area use="lightgreen4tile" />
+      </m>
+    </m>
 
     <!-- landuse base -->
     <m k="landuse">
+      <m v="tiledarkgreen">
+        <area use="darkgreen4tile" />
+      </m>
+      <m v="tilelightgreen">
+        <area use="lightgreen4tile" />
+      </m>
+
       <m v="urban">
         <area fill="#0B0C0F" />
       </m>
