@@ -46,7 +46,9 @@ public class MapScaleBar extends Layer implements UpdateListener {
 	//	private static final int MARGIN_LEFT = 5;
 
 	private static final double METER_FOOT_RATIO = 0.3048;
-	private static final int ONE_KILOMETER = 1000;
+	private static final double ONE_CENTIMETER = 0.01;
+	private static final double ONE_METER = 1.0;
+	private static final double ONE_KILOMETER = 1000;
 	private static final int ONE_MILE = 5280;
 
 	private static final Paint SCALE_BAR = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -54,18 +56,18 @@ public class MapScaleBar extends Layer implements UpdateListener {
 	private static final Paint SCALE_TEXT = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private static final Paint SCALE_TEXT_STROKE = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-	private static final int[] SCALE_BAR_VALUES_IMPERIAL = {
+	private static final double[] SCALE_BAR_VALUES_IMPERIAL = {
 	        26400000, 10560000, 5280000,
 	        2640000, 1056000, 528000,
 	        264000, 105600, 52800, 26400,
 	        10560, 5280, 2000, 1000, 500,
 	        200, 100, 50, 20,
 	        10, 5, 2, 1 };
-	private static final int[] SCALE_BAR_VALUES_METRIC = {
+	private static final double[] SCALE_BAR_VALUES_METRIC = {
 	        10000000, 5000000, 2000000, 1000000,
 	        500000, 200000, 100000, 50000,
 	        20000, 10000, 5000, 2000, 1000,
-	        500, 200, 100, 50, 20, 10, 5, 2, 1 };
+	        500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5, 0.2, 0.1 };
 
 	private boolean mImperialUnits;
 	private final Canvas mMapScaleCanvas;
@@ -122,7 +124,7 @@ public class MapScaleBar extends Layer implements UpdateListener {
 		double groundResolution = MercatorProjection
 		    .groundResolution(latitude, mapPosition.scale);
 
-		int[] scaleBarValues;
+		double[] scaleBarValues;
 		if (mImperialUnits) {
 			groundResolution = groundResolution / METER_FOOT_RATIO;
 			scaleBarValues = SCALE_BAR_VALUES_IMPERIAL;
@@ -131,11 +133,11 @@ public class MapScaleBar extends Layer implements UpdateListener {
 		}
 
 		float scaleBarLength = 0;
-		int mapScaleValue = 0;
+		double mapScaleValue = 0;
 
 		for (int i = 0; i < scaleBarValues.length; ++i) {
 			mapScaleValue = scaleBarValues[i];
-			scaleBarLength = mapScaleValue / (float) groundResolution;
+			scaleBarLength = (float)(mapScaleValue / groundResolution);
 			if (scaleBarLength < (BITMAP_WIDTH - 10)) {
 				break;
 			}
@@ -197,14 +199,14 @@ public class MapScaleBar extends Layer implements UpdateListener {
 	 * @param mapScaleValue
 	 *            the map scale value in meters.
 	 */
-	private void redrawMapScaleBitmap(float scaleBarLength, int mapScaleValue) {
+	private void redrawMapScaleBitmap(float scaleBarLength, double mapScaleValue) {
 		mBitmap.eraseColor(Color.TRANSPARENT);
 
 		// draw the scale bar
 		drawScaleBar(scaleBarLength, SCALE_BAR_STROKE);
 		drawScaleBar(scaleBarLength, SCALE_BAR);
 
-		int scaleValue;
+		double scaleValue;
 		String unitSymbol;
 		if (mImperialUnits) {
 			if (mapScaleValue < ONE_MILE) {
@@ -215,8 +217,11 @@ public class MapScaleBar extends Layer implements UpdateListener {
 				unitSymbol = mTextFields.get(TextField.MILE);
 			}
 		} else {
-			if (mapScaleValue < ONE_KILOMETER) {
-				scaleValue = mapScaleValue;
+			if (mapScaleValue < ONE_METER) {
+				scaleValue = mapScaleValue / ONE_CENTIMETER;
+				unitSymbol = mTextFields.get(TextField.CENTIMETER);
+			} else if (mapScaleValue < ONE_KILOMETER) {
+				scaleValue = mapScaleValue / ONE_METER;
 				unitSymbol = mTextFields.get(TextField.METER);
 			} else {
 				scaleValue = mapScaleValue / ONE_KILOMETER;
@@ -225,14 +230,15 @@ public class MapScaleBar extends Layer implements UpdateListener {
 		}
 
 		// draw the scale text
-		drawScaleText(scaleValue, unitSymbol, SCALE_TEXT_STROKE);
-		drawScaleText(scaleValue, unitSymbol, SCALE_TEXT);
+		drawScaleText((int)scaleValue, unitSymbol, SCALE_TEXT_STROKE);
+		drawScaleText((int)scaleValue, unitSymbol, SCALE_TEXT);
 	}
 
 	private void setDefaultTexts() {
 		mTextFields.put(TextField.FOOT, " ft");
 		mTextFields.put(TextField.MILE, " mi");
 
+		mTextFields.put(TextField.CENTIMETER, " cm");
 		mTextFields.put(TextField.METER, " m");
 		mTextFields.put(TextField.KILOMETER, " km");
 	}
@@ -277,6 +283,11 @@ public class MapScaleBar extends Layer implements UpdateListener {
 		/**
 		 * Unit symbol for one mile.
 		 */
-		MILE;
+		MILE,
+
+		/**
+		 * Unit symbol for one centimeter.
+		 */
+		CENTIMETER;
 	}
 }
