@@ -31,10 +31,10 @@ xsi:schemaLocation="http://opensciencemap.org/rendertheme ../../rendertheme.xsd"
 <!-- grassland|scrub -->
 <style-area id="darkgreen" use="tex1" fill="#19450f" fade="10" />
 
-<style-area id="green1area" use="tex1" fill="#2b572d" fade="10" />
-<style-area id="green2area" use="tex1" fill="#285228" fade="10" />
-<style-area id="green3area" use="tex1" fill="#254d25" fade="10" />
-<style-area id="green4area" use="tex1" fill="#275227" fade="10" />
+<style-area id="green1area" use="tex1" fill="#2b572d" fade="0" />
+<style-area id="green2area" use="tex1" fill="#285228" fade="0" />
+<style-area id="green3area" use="tex1" fill="#254d25" fade="0" />
+<style-area id="green4area" use="tex1" fill="#275227" fade="0" />
 
 <style-area id="farmland" use="tex1" fill="#1d1b17" fade="12" stroke="#232521" stroke-width="1.0" />
 

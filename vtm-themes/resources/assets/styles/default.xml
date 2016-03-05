@@ -31,10 +31,10 @@
   <!-- grassland|scrub -->
   <style-area id="darkgreen" use="tex1" fill="#41ae28" fade="10" />
 
-  <style-area id="green1area" use="tex1" fill="#438645" fade="10" />
-  <style-area id="green2area" use="tex1" fill="#479147" fade="10" />
-  <style-area id="green3area" use="tex1" fill="#4fa04f" fade="10" />
-  <style-area id="green4area" use="tex1" fill="#489748" fade="10" />
+  <style-area id="green1area" use="tex1" fill="#438645" fade="0" />
+  <style-area id="green2area" use="tex1" fill="#479147" fade="0" />
+  <style-area id="green3area" use="tex1" fill="#4fa04f" fade="0" />
+  <style-area id="green4area" use="tex1" fill="#489748" fade="0" />
 
   <style-area id="farmland" use="tex1" fill="#e4dab5" fade="12" stroke="#d1dbc7" stroke-width="1.0" />
 
