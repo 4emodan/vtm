@@ -44,6 +44,14 @@ public class MapPreferences {
 		editor.commit();
 	}
 
+	public void saveDefault(MapPosition pos) {
+		SharedPreferences prefs = ctx.getSharedPreferences(PREFERENCES_FILE, Activity.MODE_PRIVATE);
+
+		if (!containsViewport(prefs)) {
+			save(pos);
+		}
+	}
+
 	private static boolean containsViewport(SharedPreferences prefs) {
 		return prefs.contains(KEY_LATITUDE)
 		        && prefs.contains(KEY_LONGITUDE)
