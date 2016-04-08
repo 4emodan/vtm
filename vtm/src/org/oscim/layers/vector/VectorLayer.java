@@ -299,6 +299,17 @@ public class VectorLayer extends AbstractVectorLayer<Drawable> {
 		}
 	}
 
+	private int ceilingToPower2(int v) {
+		v--;
+		v |= v >> 1;
+		v |= v >> 2;
+		v |= v >> 4;
+		v |= v >> 8;
+		v |= v >> 16;
+		v++;
+		return v;
+	}
+
 	protected void drawStrip(Task t, int level, TriangleStripDrawable strip, Style style) {
 		if (strip.getPoints().size() < 3)
 			return;
@@ -309,22 +320,25 @@ public class VectorLayer extends AbstractVectorLayer<Drawable> {
 					style.fillAlpha));
 		}
 
-		GeometryBuffer geom;
+		mGeom.clear();
+		int verticeNum = 0;
 		synchronized (strip) {
-			// FIXME Use preallocated buffer
-			geom = new GeometryBuffer(strip.getPoints().size(), (strip.getPoints().size() - 2) * 3);
-			geom.type = GeometryBuffer.GeometryType.TRIS;
+			verticeNum = strip.getPoints().size();
+			mGeom.ensurePointSize(ceilingToPower2(verticeNum), false);
+			mGeom.ensureIndexSize(ceilingToPower2((verticeNum - 2) * 3), false);
+
+			mGeom.type = GeometryBuffer.GeometryType.TRIS;
 			for (GeoPoint point : strip.getPoints()) {
-				mConverter.addPoint(geom, point.getLongitude(), point.getLatitude());
+				mConverter.addPoint(mGeom, point.getLongitude(), point.getLatitude());
 			}
-			for (int i = 0; i < strip.getPoints().size() - 2; ++i) {
-				geom.index[i * 3 + 0] = i + 0;
-				geom.index[i * 3 + 1] = i + 1;
-				geom.index[i * 3 + 2] = i + 2;
+			for (int i = 0; i < verticeNum - 2; ++i) {
+				mGeom.index[i * 3 + 0] = i + 0;
+				mGeom.index[i * 3 + 1] = i + 1;
+				mGeom.index[i * 3 + 2] = i + 2;
 			}
 		}
 
-		mesh.addIndexedMesh(geom);
+		mesh.addIndexedMesh(mGeom, verticeNum);
 	}
 
 	protected void addCircle(GeometryBuffer g, MapPosition pos,
