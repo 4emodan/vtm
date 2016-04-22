@@ -185,6 +185,11 @@ public class Viewport {
 		mPos.scale = limitScale(mPos.scale);
 	}
 
+	public void setMaxScale(double maxScale) {
+		mMaxScale = maxScale;
+		mPos.scale = limitScale(mPos.scale);
+	}
+
 	/**
 	 * Get the inverse projection of the viewport, i.e. the
 	 * coordinates with z==0 that will be projected exactly
