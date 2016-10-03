@@ -41,7 +41,7 @@ public class Viewport {
 	private final static int MAX_ZOOMLEVEL = 24;
 	private final static int MIN_ZOOMLEVEL = 2;
 	private final static float MIN_TILT = 0;
-	private final static float MAX_TILT = 80;
+	private final static float MAX_TILT = 85;
 
 	protected double mMaxScale = (1 << MAX_ZOOMLEVEL);
 	protected double mMinScale = (1 << MIN_ZOOMLEVEL);
@@ -199,14 +199,14 @@ public class Viewport {
 	 * @param add increase extents of box
 	 */
 	public void getMapExtents(float[] box, float add) {
-		/* top-right */
-		unproject(1, -1, box, 0);
-		/* top-left */
-		unproject(-1, -1, box, 2);
-		/* bottom-left */
-		unproject(-1, 1, box, 4);
 		/* bottom-right */
-		unproject(1, 1, box, 6);
+		unproject(1, -1, box, 0);
+		/* bottom-left */
+		unproject(-1, -1, box, 2);
+		/* top-left */
+		unproject(-2f, 1, box, 4);
+		/* top-right */
+		unproject(2f, 1, box, 6);
 
 		if (add == 0)
 			return;
@@ -221,6 +221,9 @@ public class Viewport {
 	}
 
 	protected void unproject(float x, float y, float[] coords, int position) {
+
+		// TODO: What if the screen point is above the horizon?
+
 		mv[0] = x;
 		mv[1] = y;
 		mv[2] = -1;
@@ -243,8 +246,15 @@ public class Viewport {
 
 		double dist = -nz / dz;
 
-		coords[position + 0] = (float) (nx + dist * dx);
-		coords[position + 1] = (float) (ny + dist * dy);
+		if(fz <= 0) {
+			coords[position + 0] = (float) (nx + dist * dx);
+			coords[position + 1] = (float) (ny + dist * dy);
+		}
+		else
+		{
+			coords[position + 0] = (float) fx;
+			coords[position + 1] = (float) fy;
+		}
 	}
 
 	/**

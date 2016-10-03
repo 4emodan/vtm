@@ -62,11 +62,11 @@ public class TileManager {
 	 * limit number tiles with new data not uploaded to GL
 	 * TODO this should depend on the number of tiles displayed
 	 */
-	private static final int MAX_TILES_IN_QUEUE = 20;
+	private static final int MAX_TILES_IN_QUEUE = 50;
 
 	/** cache limit threshold */
-	private static final int CACHE_THRESHOLD = 25;
-	private static final int CACHE_CLEAR_THRESHOLD = 10;
+	private static final int CACHE_THRESHOLD = 100;
+	private static final int CACHE_CLEAR_THRESHOLD = 25;
 
 	private final Map mMap;
 	private final Viewport mViewport;
@@ -202,7 +202,7 @@ public class TileManager {
 		/* set up TileSet large enough to hold current tiles */
 		int num = Math.max(mMap.getWidth(), mMap.getHeight());
 		int size = Tile.SIZE >> 1;
-		int numTiles = (num * num) / (size * size) * 4;
+		int numTiles = (num * num) / (size * size) * 4 * 20; // This hard limits tile number
 
 		mNewTiles = new TileSet(numTiles);
 		mCurrentTiles = new TileSet(numTiles);
