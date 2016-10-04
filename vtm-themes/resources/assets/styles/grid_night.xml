@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rendertheme xmlns="http://opensciencemap.org/rendertheme" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://opensciencemap.org/rendertheme ../../rendertheme.xsd" version="1" map-background="#468547" base-text-scale="1.25">
+
+  <!-- base style for fixed width lines -->
+  <style-line id="fix" width="1.0" cap="butt" fix="true" />
+
+  <style-area id="tex1" src="textures/rough.png" />
+
+  <style-area id="green1area" use="tex1" fill="#2b572d" fade="0" />
+  <style-area id="green2area" use="tex1" fill="#285228" fade="0" />
+  <style-area id="green3area" use="tex1" fill="#254d25" fade="0" />
+  <style-area id="green4area" use="tex1" fill="#275227" fade="0" />
+
+  <m k="grid">
+    <m v="green1">
+      <area use="green1area" />
+    </m>
+    <m v="green2">
+      <area use="green2area" />
+    </m>
+    <m v="green3">
+      <area use="green3area" />
+    </m>
+    <m v="green4">
+      <area use="green4area" />
+    </m>
+  </m>
+
+</rendertheme>

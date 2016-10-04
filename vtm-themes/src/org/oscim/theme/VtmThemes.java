@@ -27,7 +27,9 @@ import org.oscim.backend.AssetAdapter;
 public enum VtmThemes implements ThemeFile {
 
 	DEFAULT("styles/default.xml"),
-	DEFAULT_INVERTED("styles/default_inverted.xml"),
+	DEFAULT_NIGHT("styles/default_night.xml"),
+	GRID("styles/grid.xml"),
+	GRID_NIGHT("styles/grid_night.xml"),
 	TRONRENDER("styles/tronrender.xml"),
 	NEWTRON("styles/newtron.xml"),
 	OSMARENDER("styles/osmarender.xml");
