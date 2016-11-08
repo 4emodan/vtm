@@ -221,10 +221,47 @@ public class MeshBucket extends RenderBucket {
 				gl.vertexAttribPointer(s.aPos, 2, GL.SHORT,
 				                       false, 0, ml.vertexOffset);
 
-				gl.drawElements(GL.TRIANGLES,
-				                ml.numIndices,
-				                GL.UNSIGNED_SHORT,
-				                ml.indiceOffset);
+				if (ml.area != null && ml.area.showsOverlap()) {
+					// Don't clear stencil buffer here. It stops disconnected tracks from
+					// interacting with each other. (They use different meshes)
+					int mask = 0xff;
+					//gl.clearStencil(0);
+					//gl.clear(GL.STENCIL_BUFFER_BIT);
+					// First pass counts how many times the polygons overlap
+					gl.enable(GL.STENCIL_TEST);
+					gl.stencilMask(mask);
+					// Stencil test always passes
+					gl.stencilFunc(GL.ALWAYS, 0, mask);
+					// Increase stencil value when both stencil and depth test pass
+					gl.stencilOp(GL.KEEP, GL.KEEP, GL.INCR);
+
+					// Draw the mesh and keep track of overlap
+					gl.drawElements(GL.TRIANGLES,
+							ml.numIndices,
+							GL.UNSIGNED_SHORT,
+							ml.indiceOffset);
+
+					// Set overlap color
+					GLUtils.setColor(s.uColor, ml.area.overlapColor, 1f); // overlapAlpha = 1
+					// Pass stencil if we registered an overlap
+					gl.stencilFunc(GL.LEQUAL, 2, mask);
+
+					// Redraw the mesh in a new color, but only where there was overlap
+					gl.drawElements(GL.TRIANGLES,
+							ml.numIndices,
+							GL.UNSIGNED_SHORT,
+							ml.indiceOffset);
+
+					gl.disable(GL.STENCIL_TEST);
+				}
+				else
+				{
+					// Draw the mesh
+					gl.drawElements(GL.TRIANGLES,
+							ml.numIndices,
+							GL.UNSIGNED_SHORT,
+							ml.indiceOffset);
+				}
 
 				if (dbgRender) {
 					int c = (ml.area == null) ? Color.BLUE : ml.area.color;

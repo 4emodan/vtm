@@ -18,6 +18,9 @@ public class Style {
 	public final int fillColor;
 	public final float fillAlpha;
 
+	public final int overlapColor;
+	public final boolean showsOverlap;
+
 	public final double buffer;
 	public final int scalingZoomLevel;
 
@@ -29,6 +32,9 @@ public class Style {
 
 		fillColor = builder.fillColor;
 		fillAlpha = builder.fillAlpha;
+
+		overlapColor = builder.overlapColor;
+		showsOverlap = builder.showsOverlap;
 
 		buffer = builder.buffer;
 		scalingZoomLevel = builder.scalingZoomLevel;
@@ -52,6 +58,9 @@ public class Style {
 		private int strokeColor = Color.GRAY;
 		private int fillColor = Color.GRAY;
 		private float fillAlpha = 0.25f;
+
+		private int overlapColor = Color.RED;
+		private boolean showsOverlap = false;
 
 		private double buffer = 1;
 		private int scalingZoomLevel = 1;
@@ -114,6 +123,19 @@ public class Style {
 			this.fillAlpha = (float) fillAlpha;
 			return this;
 		}
+
+		/**
+		 * Sets the overlap color for the geometry's area.
+		 *
+		 * @param overlapColor
+		 * @return
+		 */
+		public Builder overlapColor(int overlapColor) {
+			this.overlapColor = overlapColor;
+			this.showsOverlap = true;
+			return this;
+		}
+
 
 		/**
 		 * This function has effect only on Points:

@@ -270,8 +270,8 @@ public class VectorLayer extends AbstractVectorLayer<Drawable> {
 
 		MeshBucket mesh = t.buckets.getMeshBucket(level);
 		if (mesh.area == null) {
-			mesh.area = new AreaStyle(Color.fade(style.fillColor,
-			                                     style.fillAlpha));
+			mesh.area = new AreaStyle(Color.fade(style.fillColor, style.fillAlpha),
+					style.overlapColor, style.showsOverlap);
 		}
 
 		LineBucket ll = t.buckets.getLineBucket(level + 1);
@@ -316,8 +316,8 @@ public class VectorLayer extends AbstractVectorLayer<Drawable> {
 
 		MeshBucket mesh = t.buckets.getMeshBucket(level);
 		if (mesh.area == null) {
-			mesh.area = new AreaStyle(Color.fade(style.fillColor,
-					style.fillAlpha));
+			mesh.area = new AreaStyle(Color.fade(style.fillColor, style.fillAlpha),
+					style.overlapColor, style.showsOverlap);
 		}
 
 		mGeom.clear();

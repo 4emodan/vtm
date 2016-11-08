@@ -23,8 +23,7 @@ import org.oscim.renderer.bucket.TextureItem;
 import org.oscim.utils.FastMath;
 
 /*TODO 
- * - add custom shaders
- * - create distance field per tile?
+ * - add custom shaders <-- This would be very useful. tile?
  */
 public class AreaStyle extends RenderStyle {
 
@@ -38,6 +37,10 @@ public class AreaStyle extends RenderStyle {
 
 	/** Fill color */
 	public final int color;
+
+	/** Overlap color */
+	public int overlapColor;
+	public boolean showsOverlap = false;
 
 	/** Fade-out zoom-level */
 	public final int fadeScale;
@@ -65,6 +68,25 @@ public class AreaStyle extends RenderStyle {
 		this.fadeScale = -1;
 		this.blendColor = 0;
 		this.blendScale = -1;
+		this.showsOverlap = false;
+		this.color = color;
+		this.texture = null;
+		this.strokeColor = color;
+		this.strokeWidth = 1;
+	}
+
+	public AreaStyle(int color, int overlapColor, boolean showsOverlap) {
+		this(0, color, overlapColor, showsOverlap);
+	}
+
+	public AreaStyle(int level, int color, int overlapColor, boolean showsOverlap) {
+		this.level = level;
+		this.style = "";
+		this.fadeScale = -1;
+		this.blendColor = 0;
+		this.blendScale = -1;
+		this.overlapColor = overlapColor;
+		this.showsOverlap = showsOverlap;
 		this.color = color;
 		this.texture = null;
 		this.strokeColor = color;
@@ -77,6 +99,8 @@ public class AreaStyle extends RenderStyle {
 		this.fadeScale = b.fadeScale;
 		this.blendColor = b.blendColor;
 		this.blendScale = b.blendScale;
+		this.overlapColor = b.overlapColor;
+		this.showsOverlap = b.showsOverlap;
 		this.color = b.fillColor;
 		this.texture = b.texture;
 
@@ -115,6 +139,10 @@ public class AreaStyle extends RenderStyle {
 		return false;
 	}
 
+	public boolean showsOverlap() {
+		return showsOverlap;
+	}
+
 	public float getFade(double scale) {
 		if (fadeScale < 0)
 			return 1;
@@ -136,6 +164,8 @@ public class AreaStyle extends RenderStyle {
 		public int fadeScale;
 		public int blendColor;
 		public int blendScale;
+		public int overlapColor;
+		public boolean showsOverlap = false;
 
 		public TextureItem texture;
 
@@ -152,6 +182,8 @@ public class AreaStyle extends RenderStyle {
 			this.blendColor = area.blendColor;
 			this.blendScale = area.blendScale;
 			this.fillColor = area.color;
+			this.overlapColor = area.overlapColor;
+			this.showsOverlap = area.showsOverlap;
 			this.texture = area.texture;
 			this.strokeColor = area.strokeColor;
 			this.strokeWidth = area.strokeWidth;
@@ -171,6 +203,18 @@ public class AreaStyle extends RenderStyle {
 
 		public T blendColor(String color) {
 			this.blendColor = parseColor(color);
+			return self();
+		}
+
+		public T overlapColor(int color) {
+			this.overlapColor = color;
+			this.showsOverlap = true;
+			return self();
+		}
+
+		public T overlapColor(String color) {
+			this.overlapColor = parseColor(color);
+			this.showsOverlap = true;
 			return self();
 		}
 
