@@ -7,10 +7,10 @@
 
   <style-area id="tex1" src="textures/rough.png" />
 
-  <style-area id="green1area" use="tex1" fill="#438645" fade="0" />
-  <style-area id="green2area" use="tex1" fill="#479147" fade="0" />
-  <style-area id="green3area" use="tex1" fill="#4fa04f" fade="0" />
-  <style-area id="green4area" use="tex1" fill="#489748" fade="0" />
+  <style-area id="green1area" use="tex1" fill="#c1dac1" fade="0" />
+  <style-area id="green2area" use="tex1" fill="#dbf0db" fade="0" />
+  <style-area id="green3area" use="tex1" fill="#d2e6d2" fade="0" />
+  <style-area id="green4area" use="tex1" fill="#e4f3e4" fade="0" />
 
   <m k="grid">
     <m v="green1">
